@@ -1,0 +1,143 @@
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#map_container {
+	height: 100%;
+	background-color: #D5D5D5;
+}
+
+#map_center {
+  height: 75px;
+  left: 50%;
+  margin: -32px 0 0 -32px;
+  position: absolute;
+  top: 50%;
+  width: 75px;
+  background: url('images/sprite.png') no-repeat -30px 0px transparent;
+}
+
+
+
+#messages {
+	position: absolute;
+	bottom: 50px;
+	right: 10px;
+  width: 276px;
+}
+
+#messages .message {
+ 	background-color: #FFFFFF;
+  border: 1px dotted #D4D4D4;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: small;
+  padding: 2px 4px;
+  opacity: 0.9;
+}
+
+#messages .message .date {
+	color: #666666;
+  margin-right: 4px;
+  font-style: normal;
+}
+
+#messages .message span.uname {
+	color: #666666;
+  font-weight: bold;
+}
+
+
+
+#messages .message.error {
+	color: orangeRed;
+}
+#messages .message.joinpart {
+	color: #666;
+	font-style: italic;
+}
+
+
+
+#chatbox {
+	width: 270px;
+	height: 30px;
+	position: absolute;
+	bottom: 0px;
+	right: 10px;
+	background-color: #FFF;
+	border: 1px solid #d4d4d4;
+	border-bottom: none;
+	padding: 2px;
+}
+
+#chatbox_status {
+	width: 25px;
+	height: 30px;
+	float: left;
+}
+
+#chatbox_status.online {
+	background: url('images/sprite.png') no-repeat 6px 10px white;
+}
+#chatbox_status.error {
+	background: url('images/sprite.png') no-repeat 6px -20px white;
+}
+#chatbox_status.orange {
+	background: url('images/sprite.png') no-repeat 6px -50px white;
+}
+#chatbox_status.offline {
+	background: url('images/sprite.png') no-repeat 6px -80px white;
+}
+
+
+#chatbox .message {
+	border: none;
+  font-family: sans-serif;
+  font-size: medium;
+  margin: 4px 0px 0px 2px;
+  width: 230px;
+  
+	outline:none; /* safari/chrome glow */
+}
+
+
+#chatbox .connect, #chatbox .connecting {
+	font-size: small;
+	margin: 4px 0px 0px 4px;
+	color: #333;
+	
+}
+#chatbox .connecting {
+	margin: 7px 0px 0px 20px;
+}
+
+
+#chatbox .connect .name {
+	width: 140px;
+}
+
+
+/* experimental chatbox scroller styles */
+/* TODO clear #messages style  */
+
+#msgscroller_b {
+	position: absolute;
+	right: 10px;
+	bottom: 80px;
+	overflow: hidden
+}
+
+#msgscroller_a {
+	height: 300px;
+	margin-bottom: -16px;
+	overflow: scroll;
+	padding-bottom: 1px;
+	width: 275px;
+}
+
+
+
+

@@ -16,3 +16,6 @@
 	      /    ( o \
 	     '|  __ ` ||
 	      |||  ||| -'
+	      
+![mapc screenshot; Ace and Carl](http://miloss.github.io/mapc/mapc-screenshot-1.png)
+![mapc screenshot; Ace, Carl and Bob](http://miloss.github.io/mapc/mapc-screenshot-2.png)

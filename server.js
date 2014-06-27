@@ -45,13 +45,14 @@ var channel = new function () {
       
   // appends messages to this channel, stream to all
   this.appendMessage = function (nick, type, text, id) {
-    var m = { nick: nick
-            , type: type // "msg", "join", "part"
-            , text: text 
-            , timestamp: (new Date()).getTime()
-            , id: id
-            };
-
+    var m = {
+      nick: nick,
+      type: type, // "msg", "join", "part"
+      text: text,
+      timestamp: (new Date()).getTime(),
+      id: id
+    };
+    
     switch (type) {
       case "msg":
         sys.puts("<" + nick + "> " + text);
@@ -386,7 +387,7 @@ fu.post("/move", function (post, res) {
 
 var collisionCallback = function (zoom, lat, lng) {
 	
-	//span coefficients, that we multiply with screen height
+	//span coefficients, that we multiply with screen height.
 	// point is, we don't want to display too much points on higher zoom
 	// levels. calculate them based on zoom delta (for higher zooms)
 	//          -2   -1   0    1    2    3

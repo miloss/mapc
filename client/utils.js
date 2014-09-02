@@ -97,9 +97,9 @@ Date.fromString = function(str) {
 
 
 
-// utility functions
+// Utility functions
 
-util = {
+var util = {
   urlRE: /https?:\/\/([-\w\.]+)+(:\d+)?(\/([^\s]*(\?\S+)?)?)?/g, 
 
   //  html sanitizer 
@@ -138,12 +138,9 @@ util = {
 
 
 
-// CONSOLE
-// *******
-// setup new console object (IE fail) for testing
+// Setup new console object (IE fail) for testing
 window['console'] = (function (){
 	var prevConsole = (typeof console !== 'undefined') ? console : false;
-	
 	return {
 		log: function (item) {
 			if (prevConsole) {
@@ -157,8 +154,6 @@ window['console'] = (function (){
 
 
 
-// MESSAGES
-// ********
 // Object for managing notifications.
 var Messages = {
 	divid: '#messages',

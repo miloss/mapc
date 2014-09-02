@@ -1,6 +1,5 @@
 var gmaps = google.maps;
 
-
 // map
 // ---
 
@@ -14,10 +13,12 @@ var map = new function(){
 	this.init = function () {
 		var center;
 		
-		opts = { mapTypeId: gmaps.MapTypeId.ROADMAP
-					 , maxZoom: 20
-					 , minZoom: 3
-					 , streetViewControl: false };
+		opts = { 
+			mapTypeId: gmaps.MapTypeId.ROADMAP,
+			maxZoom: 20,
+			minZoom: 3,
+			streetViewControl: false
+		};
 		
 		// Try W3C Geolocation
 		//if (navigator.geolocation) {
@@ -31,7 +32,6 @@ var map = new function(){
 		} else {
 			map.init_b();
 		}
-		
 	};
 	
 	
@@ -65,10 +65,8 @@ var map = new function(){
 		setTimeout(function () {
 			$( $('#map_container > div > div').get(2) ).css('margin-right', '290px');
 		}, 1000);
-
 		
 		this.updateZoom();
-		
 	};
 	
 	this.getRandomLocation = function () {
@@ -164,11 +162,9 @@ var map = new function(){
 
 
 	
-	// interresting events
-	// -------------------
+	// Interresting events
 	
 	var moves = [];
-	
 	
 	//log moves to queue
 	this.queueMove = function (move) {
@@ -214,28 +210,24 @@ var map = new function(){
 };
 
 
-// TODO
-// to be appended to "move" object
+// TODO: Append to "move" object
 var moveUpdatePosition = function (delay) {
 	setTimeout(function () {
 		map.markers.updatePosition( this.id, this.zoom, this.lat, this.lng );
 	}, delay);
-}
+};
 
 
 	
-// markers
-// -------
-
 map['markers'] = (function(){
 	
-	// container
+	// Container
 	var markers = {};
 	
 	
-	/////// private functions
+	// Private functions
 	
-	// memoizing function for different marker images/sizes
+	// Memoizing function for different marker images/sizes
 	var getImage = (function(){
 		var data = [];
 		var	url = 'images/sprite.png',
@@ -272,24 +264,8 @@ map['markers'] = (function(){
 		return image;
 	})();
 	
-	// updates Icon and visibility based on host zoom level
-	// XXX seems like deprecated
-	var updateDeltaZoom	 = function (id, hostzoom) {
-		var mk = markers[id],
-				dzoom = mk.zoom - hostzoom,
-				visible = dzoom > -2 && dzoom < 3,
-				icon;
-
-		icon =  visible ? getImage(dzoom) : '';
-		
-		mk.setVisible( visible );
-		mk.setIcon( icon );
-			
-	};
 	
-	
-	
-	/////// interface to markers
+	// Interface to markers object
 	
 	return {
 		
@@ -402,16 +378,11 @@ map['markers'] = (function(){
 		}
 		
 	};
-
 	
-})(); //end markers
+})();
 
 
-
-// animations
-// ----------
-	
-// animation functions, to be binded to marker
+// Animation functions, to be binded to marker
 map['Animation'] = {
 	
 	MOVETO: function (latlng) {
@@ -422,7 +393,6 @@ map['Animation'] = {
 		//...
 	},
 	
-	
 	setTo: function (marker, anim) {
 		//TODO
 		var start = 0;
@@ -432,9 +402,6 @@ map['Animation'] = {
 };
 
 
-
-// events
-// ------
 
 var events = {
 	dragg: false,

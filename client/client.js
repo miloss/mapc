@@ -22,10 +22,8 @@ var initloc;
 
 
 // UI functions
-// ------------
 
-
-//updates the users link to reflect the number of active users
+// Updates the users link to reflect the number of active users
 function updateUsersLink ( ) {
   var t = nicks.length.toString() + " user";
   if (nicks.length != 1) t += "s";
@@ -33,7 +31,7 @@ function updateUsersLink ( ) {
 }
 
 
-//handles another person joining chat
+// Handles another person joining chat
 function userJoin(nick, timestamp, id) {
   //put it in the stream
   addMessage(nick, "joined", timestamp, "join");
@@ -51,7 +49,7 @@ function userJoin(nick, timestamp, id) {
 }
 
 
-//handles someone leaving
+// Handles someone leaving
 function userPart(nick, timestamp, id) {
   //put it in the stream
   addMessage(nick, "left", timestamp, "part");
@@ -61,7 +59,7 @@ function userPart(nick, timestamp, id) {
   //remove the user from the list
   for (var i = 0; i < nicks.length; i++) {
     if (nicks[i].nick == nick) {
-      nicks.splice(i,1)
+      nicks.splice(i,1);
       break;
     }
   }
@@ -95,8 +93,8 @@ function updateUptime () {
   }
 }
 
-//we want to show a count of unread messages when the window does not have focus
-//---
+// We want to show a count of unread messages when the window does not have focus
+
 //function updateTitle(){
 //  if (CONFIG.unread) {
 //    document.title = "(" + CONFIG.unread.toString() + ") mapc";
@@ -111,7 +109,7 @@ var transmission_errors = 0;
 var first_poll = true;
 
 
-//process updates if we have any, request updates from the server,
+// Process updates if we have any, request updates from the server,
 // and call again with response. the last part is like recursion except the call
 // is being made from the response handler, and not at some point during the
 // function's execution.
@@ -128,8 +126,8 @@ function longPoll (data) {
     updateRSS();
   }
 
-  //process any updates we may have
-  //data will be null on the first call of longPoll
+  // Process any updates we may have
+  // data will be null on the first call of longPoll
   if (data && data.messages) {
   	
     for (var i = 0; i < data.messages.length; i++) {
@@ -189,7 +187,7 @@ function longPoll (data) {
   
   
 
-  //make another request
+  // Make another request
   $.ajax({ cache: false
          , type: "GET"
          , url: "/recv"
@@ -214,7 +212,7 @@ function longPoll (data) {
 }
 
 
-//handle the server's response to our nickname and join request
+// Handle the server's response to our nickname and join request
 function onConnect (session) {
 	if (session.error) {
 		alert("error connecting: " + session.error);
@@ -254,7 +252,7 @@ function onConnect (session) {
 }
 
 
-//Transition the page to the state that prompts the user for a nickname
+// Transition the page to the state that prompts the user for a nickname
 function showConnect () {
   $("#chatbox_status").removeClass('online').addClass('offline');
   $("#chatbox .connect").show();
@@ -263,7 +261,7 @@ function showConnect () {
   $("#chatbox .connect .name").focus();
 }
 
-//transition the page to the loading screen
+// Transition the page to the loading screen
 function showLoad () {
   $("#chatbox .connect").hide();
   $("#chatbox .connecting").show();
@@ -282,54 +280,25 @@ function showChat (nick) {
 }
 
 
-// proxy to Messages namespace (notifications)
+// Proxy to Messages namespace (notifications)
 function addMessage (from, text, time, _class) {
 	Messages.push( from, _class, text, time );
 }
 
 
-//get a list of the users presently in the room, and add it to the stream
+// Get a list of the users presently in the room, and add it to the stream
 function who () {
   jQuery.get("/who", {}, function (data, status) {
     if (status != "success") return;
     nicks = data.nicks;
-    
-    //---
+
     //outputUsers();
   }, "json");
 }
 
 
 
-//used to keep the most recent messages visible
-//---
-//function scrollDown () {
-//  return false;
-//  
-//  window.scrollBy(0, 100000000000000000);
-//  $("#entry").focus();
-//}
-
-
-
-//add a list of present chat members to the stream
-//---
-//function outputUsers () {
-//  var nick_string = nicks.length > 0 ? nicks.join(", ") : "(none)";
-//  addMessage("users:", nick_string, new Date(), "notice");
-//  return false;
-//}
-
-
-
-
-
-
-// client object
-// -------------
-
 var client = {};
-
 
 client.sendMove = function () {
 	var cnt = map.get('center'),

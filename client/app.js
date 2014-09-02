@@ -1,15 +1,15 @@
 $(document).ready(function(){
 	
-	// initialize map
+	// Initialize map
 	map.init();
 	
 	showConnect();
 	
-	// start polling for messages and/or users right now
+	// Start polling for messages and/or users right now
 	longPoll();
 	
 	
-	// update the daemon uptime every 10 seconds
+	// Update the daemon uptime every 10 seconds
 	setInterval(function () {
 		updateUptime();
 	}, 10*1000);
@@ -25,7 +25,7 @@ $(document).ready(function(){
 
 	
 	// --- CHAT ---
-	//sending a chat message
+	// Sending a chat message
 	$('#chatbox .message').keydown(function (e) {
 		var $el = $(this);
 		
@@ -45,9 +45,8 @@ $(document).ready(function(){
 	
 	
 	
-	
 	// --- CONNECT ---
-	//try joining the chat when the user clicks the connect button
+	// Try joining the chat when the user clicks the connect button
 	$("#chatbox .connect form").submit(function () {
 		var nick = $("#chatbox .connect .name").attr("value");
 		
@@ -74,8 +73,7 @@ $(document).ready(function(){
 			return false;
 		}
 		
-
-		//make the actual join request to the server
+		// Make the actual join request to the server
 		$.ajax({ cache: false
 				, type: "GET" // XXX should be POST
 				, dataType: "json"
@@ -87,26 +85,20 @@ $(document).ready(function(){
 					alert( err );
 					showConnect();
 				}
-				});
-				
+		});
 		return false;
-		
 	});
-	// end connect
 	
-	
-	//output list of online users
+	// Output list of online users
 	//---
 	//$("#usersLink").click(outputUsers);
 
 });
 
-
-//if we can, notify the server that we're going away.
+// If we can, notify the server that we're going away.
 $(window).unload(function () {
 	jQuery.get("/part", {id: CONFIG.id}, function (data) { }, "json");
 });
-
 
 function robotConversation() {
 	Messages.push( 'pera', 'joinpart', 'joined' );

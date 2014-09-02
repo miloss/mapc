@@ -1,17 +1,16 @@
-// cached lat - lon spans
-// ......................
-// used both on server and client side
+// Cached lat - lon spans
+// Shared on server and client
 
 var lls = exports;
 
 
-// based on zoom = 3 and 1280x800 viewport
-// that is 800px, since we matter only height in Mercator projection
+// Based on zoom = 3 and 1280x800 viewport
+// (effectively - 800px height, since we matter only height in Mercator projection)
 
 function getSpans(i, zoom) {
-	var map_ = map.map,
-		max = 6,
-		vname = 'lat';
+	var map_ = map.map
+	  , max = 6
+	  , vname = 'lat';
 
 	map_.setZoom(zoom);
 	map_.setCenter(new gmaps.LatLng(i, 0));
@@ -19,13 +18,11 @@ function getSpans(i, zoom) {
 	console.log(vname + '[' + i + '] = ' + span.lat() + ';');
 	
 	if (i < max) {
-		setTimeout( function(){
+		setTimeout(function(){
 			getSpans(i+1, zoom);
-		},
-		1000 );
+		}, 1000);
 	}
 };
-
 
 
 lls.lngSpan = function (zoom) {
@@ -34,15 +31,14 @@ lls.lngSpan = function (zoom) {
 };
 
 
-// memoizing latitude function
+// Memoizing latitude function
 lls.latSpan = (function () {
 	var memo = [], len = 25;
 	while (len--) memo[len] = [];
-	
-	
+
 	var lspan = function (latitude, zoom) {
-		var latitude = Math.ceil( Math.abs( latitude ) ),
-				span = memo[zoom][latitude];
+		var latitude = Math.ceil( Math.abs( latitude ) )
+		  , span = memo[zoom][latitude];
 		
 		if (typeof span !== 'number') {
 			span = latscr[ latitude ] * Math.pow(2, 3 - zoom);
@@ -55,9 +51,7 @@ lls.latSpan = (function () {
 })();
 
 
-
 var latscr = [];
-
 latscr[0] = 114.65304245043417;
 latscr[1] = 114.64511058036075;
 latscr[2] = 114.62130711258408;

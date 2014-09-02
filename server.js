@@ -1,49 +1,44 @@
 var vars = require("./vars");
 
-HOST = vars.HOST
-PORT = vars.PORT;
+var HOST = vars.HOST;
+var PORT = vars.PORT;
 
 
-// when the daemon started
+// When the daemon started
 var starttime = (new Date()).getTime();
 
 var mem = process.memoryUsage();
 
-// every 10 seconds poll for the memory.
+// Every 10 seconds poll for the memory.
 setInterval(function () {
   mem = process.memoryUsage();
 }, 10*1000);
 
 
-var fu = require("./fu"),
-    sys = require("sys"),
-    url = require("url"),
-    qs = require("querystring"),
-    lls = require("./latlonspan");
+var fu = require("./fu")
+  , sys = require("sys")
+  , url = require("url")
+  , qs = require("querystring")
+  , lls = require("./latlonspan");
 
-var MESSAGE_BACKLOG = 200,
-    SESSION_TIMEOUT = 60 * 1000;
+var MESSAGE_BACKLOG = 200
+  , SESSION_TIMEOUT = 60 * 1000;
 
-
-// set path to static files 
 fu.staticPath = vars.staticPath;
 
-// set static files
 var staticFiles = vars.staticFiles;
 
 
 
-
-// channel
+// Channel
 // -------
 
 var channel = new function () {
-  var messages = [],
-      callbacks = [],
-      locations = {};
-    
-      
-  // appends messages to this channel, stream to all
+  var messages = []
+	  , callbacks = []
+	  , locations = {};
+
+  // Appends messages to this channel, stream to all
   this.appendMessage = function (nick, type, text, id) {
     var m = {
       nick: nick,
@@ -67,48 +62,46 @@ var channel = new function () {
 
     messages.push( m );
 
-
-	  // go trough callbacks queue
+	  // Go trough callbacks queue
 	  while (callbacks.length)
 		  callbacks.shift().callback([m], []);
 
     while (messages.length > MESSAGE_BACKLOG)
       messages.shift();
   };
-  
-  
-  // append moves to this channel, stream to collisioned only
+
+
+  // Append moves to this channel, stream to collisioned only
   this.appendMove = function (id, zoom, lat, lng, nick) {
-  	var m = { id: id
-  					, zoom: zoom
-		  			, lat: lat
-		  			, lng: lng
-		  			, timestamp: (new Date()).getTime()
-		  			}, j = 0;
-  			
+	  var m = {
+		  id: id,
+		  zoom: zoom,
+		  lat: lat,
+		  lng: lng,
+		  timestamp: (new Date()).getTime()
+	  };
+	  var j = 0;
+
   	sys.puts("(" + nick + ") -> " + zoom + ':(' + lat + ',' + lng + ')' );
-  	
-  	//FIXME possible overhead, storing ID also in "move" as a field
+
+  	// FIXME: Possible overhead, storing ID also in "move" as a field
   	locations[id] = m;
-  	
-  	      
-    //TODO
-    // if "moved enough"
+
+    // TODO:
+	  // if "moved enough"
     // re-scan locations -> respond to "self" callback
-    
-  	
+
   	while (j < callbacks.length)
-  		if ( isVisibleTo(m, j) )
-  			callbacks.splice(j, 1)[0].callback([], [m]);
-  		else j++;
-  		
+		if ( isVisibleTo(m, j) )
+			callbacks.splice(j, 1)[0].callback([], [m]);
+	  else j++;
   };
   
-  // check collision for move
-  // maybe add easy check (zoom level)?
-  function isVisibleTo (m, j) {
+  // Check collision for move
+  // Maybe add easy check (zoom level)?
+  function isVisibleTo(m, j) {
   	var cb = callbacks[j]
-  	    session = cb.id || false;
+	    , session = cb.id || false;
   	
   	if ( !session ) return false;
   	if ( session === m.id ) return false;
@@ -116,26 +109,24 @@ var channel = new function () {
   	
   	return collisioners[ session ](m.zoom, m.lat, m.lng);
   };
-  
-  
 
-  // responds to queries
+
+  // Responds to queries
   this.querychannel = function (since, lastmove, callback, id) {
-    var matching = [],
-        matchingmoves = [],
-        i, key, message, move;
-
+	  var matching = []
+	    , matchingmoves = []
+	    , i, key, message, move;
     
-    //get messages
+    // Get messages
     for (i = 0; i < messages.length; i++) {
       message = messages[i];
-      
+
       if ( message.timestamp > since )
       	  matching.push(message);
     }
     
-    //get moves
-    // FIXME check collision from here also ?
+    // Get moves
+    // FIXME: Check collision from here also?
     // do not return moves for non-sessioned
     if (id !== '') {
     	for (key in locations) {
@@ -152,12 +143,10 @@ var channel = new function () {
     } else {
       callbacks.push({ timestamp: new Date(), callback: callback, id: id });
     }
-    
   };
 
-
-  // clear old callbacks
-  // they can hang around for at most 30 seconds.
+  // Clear old callbacks
+	// they can hang around for at most 30 seconds.
   setInterval(function () {
     var now = new Date();
     while (callbacks.length > 0 && now - callbacks[0].timestamp > 30*1000) {
@@ -166,16 +155,13 @@ var channel = new function () {
   }, 3000);
   
 };
-// end channel
 
 
 
-
-
-// sessions
+// Sessions
 // --------
 
-// in addition to sessions, we also mantain "collisioners" callbacks
+// In addition to sessions, we also mantain "collisioners" callbacks
 // that we use for location - targeted response
 
 var sessions = {};
@@ -185,21 +171,23 @@ function createSession (nick) {
   if (nick.length > 50) return null;
   if (/[^\w_\-^!]/.exec(nick)) return null;
 
+	var session;
+
   for (var i in sessions) {
-    var session = sessions[i];
+	  session = sessions[i];
     if (session && session.nick === nick) return null;
   }
 
-  var session = {
-    nick: nick, 
-    id: Math.floor(Math.random()*99999999999).toString(),
-    timestamp: new Date(),
+	session = {
+		nick: nick, 
+		id: Math.floor(Math.random()*99999999999).toString(),
+		timestamp: new Date(),
 
     poke: function () {
       session.timestamp = new Date();
     },
     
-    // update session collision callback
+    // Update session collision callback
     locate: function (zoom, lat, lng) {
     	session.loc = [zoom, lat, lng];
      	collisioners[session.id] = collisionCallback(zoom, lat, lng);
@@ -216,7 +204,7 @@ function createSession (nick) {
   return session;
 }
 
-// interval to kill off old sessions
+// Interval to kill off old sessions
 setInterval(function () {
   var now = new Date();
   for (var id in sessions) {
@@ -229,19 +217,13 @@ setInterval(function () {
   }
 }, 1000);
 
-// end sessions
 
-
-
-
-
-// fu
+// Fu
 // --
 
 fu.listen(Number(process.env.PORT || PORT), HOST);
 
-
-// static files
+// Static files
 fu.get("/", fu.staticHandler("index.html"));
 
 for (var i = 0; i < staticFiles.length; i++) {
@@ -249,7 +231,7 @@ for (var i = 0; i < staticFiles.length; i++) {
 }
 
 
-// requests
+// Requests
 
 fu.get("/who", function (req, res) {
   var nicks = [];
@@ -262,7 +244,6 @@ fu.get("/who", function (req, res) {
                       , rss: mem.rss
                       });
 });
-
 
 
 fu.get("/join", function (req, res) {
@@ -292,7 +273,6 @@ fu.get("/join", function (req, res) {
 });
 
 
-
 fu.get("/part", function (req, res) {
   var id = qs.parse(url.parse(req.url).query).id;
   var session;
@@ -302,7 +282,6 @@ fu.get("/part", function (req, res) {
   }
   res.simpleJSON(200, { rss: mem.rss });
 });
-
 
 
 fu.get("/recv", function (req, res) {
@@ -348,7 +327,6 @@ fu.post("/send", function (post, res) {
 });
 
 
-
 fu.post("/move", function (post, res) {
 	var qvars = qs.parse(post.toString());
   var id = qvars.id,
@@ -380,42 +358,37 @@ fu.post("/move", function (post, res) {
 
 
 
-// collision
-// ---------
-// check visibility for location, against another location
-// TODO non-blocking approach (pass function), if possible
-
+// Check visibility for location, against another location
 var collisionCallback = function (zoom, lat, lng) {
-	
-	//span coefficients, that we multiply with screen height.
+
+	// Span coefficients, that we multiply with screen height.
 	// point is, we don't want to display too much points on higher zoom
 	// levels. calculate them based on zoom delta (for higher zooms)
 	//          -2   -1   0    1    2    3
-	var	latC = [0.7, 0.7, 0.7, 0.6, 0.5, 0.4],
-		  lngC = [0.7, 0.7, 0.7, 0.6, 0.5, 0.4];
-	
-	//"zero" offset for arrays above
+	var	latC = [0.7, 0.7, 0.7, 0.6, 0.5, 0.4]
+	  , lngC = [0.7, 0.7, 0.7, 0.6, 0.5, 0.4];
+
+	// Zero-offset for arrays above
 	var zoff = 2;
-	
-	
+
 	return function (a, b, c) {
 		//delta zoom allowed is -2..3
-		var dz = a - zoom,
-		    lats, lngs;
-		
-		
-		// zoom not inside host bounds
+		var dz = a - zoom
+		  , lats, lngs;
+
+		// Zoom not inside host bounds
 		if ( dz < -2 || dz > 3 ) return false;
-		
-		// check longitude
+
+		// Check longitude
 		lngs = lls.lngSpan(zoom) * lngC[dz + zoff];
 		if ( c < (lng - lngs) || c > (lng + lngs) ) return false;
-		
-		// check latitude
+
+		// Check latitude
 		lats = lls.latSpan(lat, zoom) * latC[dz + zoff];
 		if ( b < (lat - lats) || b > (lat + lats) ) return false;
 
 		return true;
 	};
+
 };
 

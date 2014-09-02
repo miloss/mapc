@@ -1,14 +1,33 @@
 var createServer = require("http").createServer;
 var readFile = require("fs").readFile;
-var sys = require("sys"),
-url = require("url"),
-qs = require("querystring");
+var sys = require("sys");
+var url = require("url");
+var qs = require("querystring");
 
-DEBUG = false;
+var DEBUG = false;
 
 var fu = exports;
 
 var NOT_FOUND = "Not Found\n";
+
+function notFound(req, res) {
+  res.writeHead(404, {
+	  "Content-Type": "text/plain"
+	  , "Content-Length": NOT_FOUND.length
+  });
+	res.end(NOT_FOUND);
+}
+
+var getMap = {};
+var postMap = {};
+
+fu.get = function (path, handler) {
+  getMap[path] = handler;
+};
+
+fu.post = function (path, handler) {
+  postMap[path] = handler;
+};
 
 
 var server = createServer(function (req, res) {

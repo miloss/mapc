@@ -221,7 +221,7 @@ setInterval(function () {
 // Fu
 // --
 
-fu.listen(Number(PORT, HOST);
+fu.listen(PORT, HOST);
 
 // Static files
 fu.get("/", fu.staticHandler("index.html"));

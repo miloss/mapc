@@ -15,5 +15,6 @@ vars.staticFiles = [
 	'client.js',
 	'map.js',
 	'images/crosshair.png',
-	'images/sprite.png'
+	'images/sprite.png',
+	'favicon.ico'
 ];

@@ -2,9 +2,14 @@
   "name": "mapc",
   "version": "0.0.9",
 	"description": "Node chatting on Google Maps",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {},
+	"scripts": {
+		"start": "node server.js"
+	},
+	"dependencies": {},
+	"engines": {},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/miloss/mapc"
+	},
 	"author": "Milos Popovic"
 }

@@ -1,5 +1,5 @@
 var vars = exports;
-vars.HOST = 'localhost';
+
 vars.PORT = 5000;
 
 // Server static files

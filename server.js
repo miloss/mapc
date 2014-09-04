@@ -1,5 +1,4 @@
 var vars = require("./vars");
-var HOST = vars.HOST;
 var PORT = process.env.PORT || vars.PORT;
 
 
@@ -220,7 +219,7 @@ setInterval(function () {
 // Fu
 // --
 
-fu.listen(PORT, HOST);
+fu.listen(PORT);
 
 // Static files
 fu.get("/", fu.staticHandler("index.html"));

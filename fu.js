@@ -79,9 +79,9 @@ var server = createServer(function (req, res) {
 
 
 
-fu.listen = function (port, host) {
-  server.listen(port, host);
-  sys.puts("Server at http://" + (host || "127.0.0.1") + ":" + port.toString() + "/");
+fu.listen = function (port) {
+  server.listen(port);
+  sys.puts("Server at http://localhost:" + port + "/");
 };
 
 

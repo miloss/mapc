@@ -1,0 +1,10 @@
+{
+  "name": "mapc",
+  "version": "0.0.9",
+	"description": "Node chatting on Google Maps",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {},
+	"author": "Milos Popovic"
+}

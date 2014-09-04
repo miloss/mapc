@@ -1,6 +1,6 @@
 var vars = exports;
 vars.HOST = 'localhost';
-vars.PORT = process.env.PORT || 5000;
+vars.PORT = 5000;
 
 // Server static files
 

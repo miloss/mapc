@@ -1,7 +1,6 @@
 var vars = require("./vars");
-
 var HOST = vars.HOST;
-var PORT = vars.PORT;
+var PORT = process.env.PORT || vars.PORT;
 
 
 // When the daemon started

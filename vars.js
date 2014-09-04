@@ -1,6 +1,5 @@
 var vars = exports;
-vars.HOST = null; // localhost
-vars.HOST = 'mapc.local';
+vars.HOST = 'localhost';
 vars.PORT = 8001;
 
 // Server static files
